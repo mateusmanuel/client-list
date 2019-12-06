@@ -1,0 +1,34 @@
+<h1 mat-dialog-title><strong>{{action}}</strong></h1>
+<div mat-dialog-content>
+  <form [formGroup]="client" class="container" *ngIf="action != 'Excluir'; else elseTemplate">
+        <mat-form-field >
+            <input matInput formControlName="name" required placeholder="Nome">
+            <mat-error *ngIf="(name.dirty || name.touched) && name.invalid && name.errors.required">{{getMsgRequired()}}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field >
+            <input matInput formControlName="cpf" required placeholder="CPF" [textMask]="{mask: cpfMask}">
+            <mat-error *ngIf="(cpf.dirty || cpf.touched) && cpf.invalid && cpf.errors.required">{{getMsgRequired()}}</mat-error>
+            <mat-error *ngIf="client.get('cpf').getError('cpfNotValid')">{{getMsgCPFInvalid()}}</mat-error>    
+        </mat-form-field>
+
+        <mat-form-field >
+            <input matInput formControlName="email" required placeholder="E-mail" type="email">
+            <mat-error *ngIf="(email.dirty || email.touched) && email.invalid && email.errors.required">{{getMsgRequired()}}</mat-error>
+            <mat-error *ngIf="client.get('email').getError('email')">{{getMsgEmailInvalid()}}</mat-error>    
+        </mat-form-field>
+
+        <mat-form-field >
+            <input matInput formControlName="phone" required placeholder="Telefone" [textMask]="{mask: phoneMask}" >
+            <mat-error *ngIf="(phone.dirty || phone.touched) && phone.invalid && phone.errors.required">{{getMsgRequired()}}</mat-error>
+        </mat-form-field>
+
+    </form>
+    <ng-template #elseTemplate>
+        Certeza da exclusão de <b>{{ client.value.name }}</b>?
+    </ng-template>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="doAction()" [disabled]="(action == 'Adicionar' || action == 'Atualizar') && !client.valid">{{action}}</button>
+  <button mat-button (click)="closeDialog()" mat-flat-button color="warn">Cancelar</button>
+</div>
